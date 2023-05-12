@@ -43,10 +43,10 @@ class CustomBuild(build_ext):
       dest_dir = os.path.join(self.build_lib, 'gfootball_engine')
     else:
       dest_dir = "gfootball_engine"
-      if os.system('cp -r third_party/gfootball_engine/ ' + dest_dir):
+      if os.system(f'cp -r third_party/gfootball_engine/ {dest_dir}'):
         raise OSError("Google Research Football: Could not copy "
                       "engine to %s." % (dest_dir))
-    if os.system('cp -r third_party/fonts ' + dest_dir):
+    if os.system(f'cp -r third_party/fonts {dest_dir}'):
       raise OSError('Google Research Football: Could not copy '
                     'fonts to %s.' % (dest_dir))
 
@@ -62,13 +62,12 @@ class CustomBuild(build_ext):
           'cp third_party/gfootball_engine/lib/prebuilt_gameplayfootball.so ' +
           dest_dir + '/_gameplayfootball.so'):
         raise OSError(
-            'Failed to copy pre-built library to a final destination %s.' %
-            dest_dir)
-    else:
-      if (os.system('gfootball/build_game_engine.sh') or
+            f'Failed to copy pre-built library to a final destination {dest_dir}.'
+        )
+    elif (os.system('gfootball/build_game_engine.sh') or
           os.system('cp third_party/gfootball_engine/_gameplayfootball.so ' +
                     dest_dir)):
-        raise OSError('Google Research Football compilation failed')
+      raise OSError('Google Research Football compilation failed')
     super(CustomBuild, self).run()
 
 

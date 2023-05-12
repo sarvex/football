@@ -25,9 +25,9 @@ import grpc
 
 def get_random_string(length=10, append_timestamp=True):
   characters = string.ascii_lowercase + string.ascii_uppercase + string.digits
-  res = ''.join(random.choice(characters) for i in range(length))
+  res = ''.join(random.choice(characters) for _ in range(length))
   if append_timestamp:
-    res += '_{}'.format(int(time.time()))
+    res += f'_{int(time.time())}'
   return res
 
 
@@ -44,7 +44,6 @@ def get_master_address(track='default'):
   # disabled server side caching on the file we were still getting the old
   # content of the file.
   response = urllib.request.urlopen(
-      config.master_address_public_path + '_' + track + '?' +
-      get_random_string())
+      f'{config.master_address_public_path}_{track}?{get_random_string()}')
   ip = response.read().decode('utf-8').strip()
-  return '{}:{}'.format(ip, config.grpc_port)
+  return f'{ip}:{config.grpc_port}'

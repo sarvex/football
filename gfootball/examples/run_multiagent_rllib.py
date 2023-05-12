@@ -56,18 +56,13 @@ class RllibGFootball(MultiAgentEnv):
 
   def reset(self):
     original_obs = self.env.reset()
-    obs = {}
-    for x in range(self.num_agents):
-      if self.num_agents > 1:
-        obs['agent_%d' % x] = original_obs[x]
-      else:
-        obs['agent_%d' % x] = original_obs
-    return obs
+    return {
+        'agent_%d' % x: original_obs[x] if self.num_agents > 1 else original_obs
+        for x in range(self.num_agents)
+    }
 
   def step(self, action_dict):
-    actions = []
-    for key, value in sorted(action_dict.items()):
-      actions.append(value)
+    actions = [value for key, value in sorted(action_dict.items())]
     o, r, d, i = self.env.step(actions)
     rewards = {}
     obs = {}

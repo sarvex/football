@@ -45,10 +45,7 @@ NUM_ACTIONS = len(football_action_set.action_set_dict['default'])
 
 def random_actions(obs):
   num_players = 1 if len(obs.shape) == 3 else obs.shape[0]
-  a = []
-  for _ in range(num_players):
-    a.append(random.randint(0, NUM_ACTIONS - 1))
-  return a
+  return [random.randint(0, NUM_ACTIONS - 1) for _ in range(num_players)]
 
 
 def seed_rl_preprocessing(observation):
@@ -66,8 +63,9 @@ def generate_actions(obs, model):
     a.append(model(seed_rl_preprocessing(obs))[0][0].numpy())
   else:
     # Multiagent -> first dimension is a number of agents you control.
-    for x in range(obs.shape[0]):
-      a.append(model(seed_rl_preprocessing(obs[x]))[0][0].numpy())
+    a.extend(
+        model(seed_rl_preprocessing(obs[x]))[0][0].numpy()
+        for x in range(obs.shape[0]))
   return a
 
 
